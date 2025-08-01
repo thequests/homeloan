@@ -1,9 +1,9 @@
 server:
-  port: 8081
+  port: 8084
 
 spring:
   application:
-    name: tracker-service-1
+    name: TRACKER-SERVICE
     
   datasource:
     url: jdbc:oracle:thin:@localhost:1521:orcl

@@ -27,8 +27,8 @@ public class LoanApplicationMetricService implements LoanApplicationMetricServic
 		List<Integer> data = new ArrayList<>();
 		for (LoanApplication application : repo.findAll()) {
             // Check for null status before accessing
-			if (application.getApplicationStatus() != null) {
-                if(application.getApplicationStatus()) {
+			if (application.getStatus() != null) {
+                if(application.getStatus() == "ACCEPTED") {
                     acceptedTotal++;
                 } else {
                     rejectedTotal++;
@@ -48,7 +48,7 @@ public class LoanApplicationMetricService implements LoanApplicationMetricServic
     @Override
     public double fetchAverageApprovedLoanAmount() {
         return repo.findByApplicationStatus(true).stream()
-            .mapToDouble(LoanApplication::getLoanAmount)
+            .mapToDouble(LoanApplication::getAmountRequested)
             .average()
             .orElse(0.0);
     }
@@ -71,7 +71,7 @@ public class LoanApplicationMetricService implements LoanApplicationMetricServic
     @Override
     public double fetchTotalDisbursedAmount() {
         return repo.findByApplicationStatus(true).stream()
-            .mapToDouble(LoanApplication::getLoanAmount)
+            .mapToDouble(LoanApplication::getAmountRequested)
             .sum();
     }
 
@@ -91,7 +91,7 @@ public class LoanApplicationMetricService implements LoanApplicationMetricServic
     public double fetchAverageLoanTenure() {
         // Calculates average tenure for approved loans
         return repo.findByApplicationStatus(true).stream()
-            .mapToInt(LoanApplication::getTenure)
+            .mapToInt(LoanApplication::getTenureMonths)
             .average()
             .orElse(0.0);
     }
@@ -108,9 +108,9 @@ public class LoanApplicationMetricService implements LoanApplicationMetricServic
         Map<String, Long> distribution = new HashMap<>();
         List<LoanApplication> applications = repo.findAll();
 
-        long lessThan50k = applications.stream().filter(a -> a.getLoanAmount() < 50000).count();
-        long between50kAnd150k = applications.stream().filter(a -> a.getLoanAmount() >= 50000 && a.getLoanAmount() < 150000).count();
-        long greaterThan150k = applications.stream().filter(a -> a.getLoanAmount() >= 150000).count();
+        long lessThan50k = applications.stream().filter(a -> a.getAmountRequested() < 50000).count();
+        long between50kAnd150k = applications.stream().filter(a -> a.getAmountRequested() >= 50000 && a.getAmountRequested() < 150000).count();
+        long greaterThan150k = applications.stream().filter(a -> a.getAmountRequested() >= 150000).count();
 
         distribution.put("Under $50,000", lessThan50k);
         distribution.put("$50,000 - $149,999", between50kAnd150k);

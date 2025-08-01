@@ -39,7 +39,7 @@ public class LoanApplicationStatusService implements LoanApplicationStatusServic
 	@Override
 	public Boolean checkStatusofApplication(int customerId) {
 		for (LoanApplication application:loanRepo.findAll()) {
-			if(application.getCustomerId() == customerId) {
+			if(application.getUserId() == customerId) {
 				return true;				
 			}
 		}

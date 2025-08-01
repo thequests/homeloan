@@ -1,9 +1,9 @@
 server:
-  port: 8081
+  port: 8089
 
 spring:
   application:
-    name: emi-service
+    name: EMI-SERVICE
     
   datasource:
     url: jdbc:oracle:thin:@localhost:1521:orcl

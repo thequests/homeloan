@@ -1,59 +1,59 @@
 package com.example.entities;
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 @Entity
-@Table(name="loanApplication")
-public class LoanApplication implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int applicationId;
-
-	private int customerId;
-	private int propertyId;
-	private int incomeId;
-	private int loanAmount;
-	private int tenure; // Assuming tenure is in months
-	private Boolean applicationStatus;
-    
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime applicationDate;
-
-	// Default Constructor
-	public LoanApplication() {}
+@Table(name = "loan_application")
+public class LoanApplication {
 	
-	// Parameterized constructor
-	public LoanApplication(int applicationId, int customerId, int propertyId, int incomeId, int loanAmount, int tenure,
-			Boolean applicationStatus, LocalDateTime applicationDate) {
+	public LoanApplication(int applicationId, int amountRequested, int tenureMonths, LocalDateTime createDate, String status,
+			int userId, int propertyId, int incomeDetailId) {
 		super();
 		this.applicationId = applicationId;
-		this.customerId = customerId;
+		this.amountRequested = amountRequested;
+		this.tenureMonths = tenureMonths;
+		this.createDate = createDate;
+		this.status = status;
+		this.userId = userId;
 		this.propertyId = propertyId;
-		this.incomeId = incomeId;
-		this.loanAmount = loanAmount;
-		this.tenure = tenure;
-		this.applicationStatus = applicationStatus;
-        this.applicationDate = applicationDate;
+		this.incomeDetailId = incomeDetailId;
 	}
-
-	// Getters and Setters
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "APPLICATION_ID", nullable = false)
+	private int applicationId;
+	@Column(name = "AMOUNT_REQUESTED")
+	private int amountRequested;
+	@Column(name = "TENURE_MONTHS")
+	private int tenureMonths;
+	@Column(name = "CREATE_DATE")
+	private LocalDateTime createDate;
+    @PrePersist
+    protected void onCreate() {
+        this.createDate = LocalDateTime.now();
+    }
+	@Column(name = "STATUS")
+	private String status;
+	@Column(name = "USER_ID")
+	private int userId; // FK to user_account
+	@Column(name = "PROPERTY_ID")
+	private int propertyId; // FK to property
+	@Column(name = "INCOME_DETAIL_ID")
+	private int incomeDetailId; // FK to income_detail
+	
+	public LoanApplication() {};
+	
 	public int getApplicationId() {
 		return applicationId;
 	}
 	public void setApplicationId(int applicationId) {
 		this.applicationId = applicationId;
-	}
-	public int getCustomerId() {
-		return customerId;
-	}
-	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
 	}
 	public int getPropertyId() {
 		return propertyId;
@@ -61,34 +61,40 @@ public class LoanApplication implements Serializable {
 	public void setPropertyId(int propertyId) {
 		this.propertyId = propertyId;
 	}
-	public int getIncomeId() {
-		return incomeId;
+	public int getIncomeDetailId() {
+		return incomeDetailId;
 	}
-	public void setIncomeId(int incomeId) {
-		this.incomeId = incomeId;
+	public void setIncomeDetailId(int incomeDetailId) {
+		this.incomeDetailId = incomeDetailId;
 	}
-	public int getLoanAmount() {
-		return loanAmount;
+	public int getAmountRequested() {
+		return amountRequested;
 	}
-	public void setLoanAmount(int loanAmount) {
-		this.loanAmount = loanAmount;
+	public void setAmountRequested(int amountRequested) {
+		this.amountRequested = amountRequested;
 	}
-	public int getTenure() {
-		return tenure;
+	public int getTenureMonths() {
+		return tenureMonths;
 	}
-	public void setTenure(int tenure) {
-		this.tenure = tenure;
+	public void setTenureMonths(int tenureMonths) {
+		this.tenureMonths = tenureMonths;
 	}
-	public Boolean getApplicationStatus() {
-		return applicationStatus;
+	public LocalDateTime getCreateDate() {
+		return createDate;
 	}
-	public void setApplicationStatus(Boolean applicationStatus) {
-		this.applicationStatus = applicationStatus;
+	public void setCreateDate(LocalDateTime createDate) {
+		this.createDate = createDate;
 	}
-    public LocalDateTime getApplicationDate() {
-        return applicationDate;
-    }
-    public void setApplicationDate(LocalDateTime applicationDate) {
-        this.applicationDate = applicationDate;
-    }
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 }

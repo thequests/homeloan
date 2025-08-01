@@ -1,15 +1,15 @@
 server:
-  port: 8082
+  port: 8081
 
 spring:
   application:
-    name: AdminService
+    name: ADMINSERVICE
     
   datasource:
     url: jdbc:oracle:thin:@localhost:1521:orcl
     driver-class-name: oracle.jdbc.OracleDriver
-    username: soham_nawale
-    password: soham
+    username: suraj
+    password: tiwari
     
   jpa:
     show-sql: true

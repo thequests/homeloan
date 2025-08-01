@@ -38,7 +38,7 @@ public class LoanApplicationController {
     }
 
     @PutMapping("/{id}")
-    public LoanApplication update(@PathVariable long id, @RequestBody LoanApplication loanApplication) {
+    public LoanApplication update(@PathVariable int id, @RequestBody LoanApplication loanApplication) {
         loanApplication.setApplicationId(id);
         return loanApplicationService.updateLoanApplication(loanApplication);
     }
