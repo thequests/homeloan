@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Loan Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Login Form Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-form {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            width: 400px;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .login-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            margin-right: 10px;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #8e9aaf 0%, #cbc0d3 100%);
+            color: white;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .pending { color: #f39c12; }
+        .approved { color: #27ae60; }
+        .rejected { color: #e74c3c; }
+        .total { color: #3498db; }
+
+        .applications-table {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-verified {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 2% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .detail-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .detail-section h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-filter input,
+        .search-filter select {
+            padding: 10px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .search-filter input:focus,
+        .search-filter select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+                padding: 20px;
+            }
+            
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-filter {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="loginContainer" class="login-container">
+        <form class="login-form" id="loginForm">
+            <h2>Admin Login</h2>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        
+        <div class="container">
+            <div class="header">
+                <h1>Home Loan Admin Dashboard</h1>
+                <p>Welcome, <span id="adminName">Admin</span> | <span id="currentDate"></span></p>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number total" id="totalApplications">25</div>
+                    <div class="stat-label">Total Applications</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number pending" id="pendingApplications">8</div>
+                    <div class="stat-label">Pending Review</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number approved" id="approvedApplications">12</div>
+                    <div class="stat-label">Approved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number rejected" id="rejectedApplications">5</div>
+                    <div class="stat-label">Rejected</div>
+                </div>
+            </div>
+
+            <!-- Applications Table -->
+            <div class="applications-table">
+                <h3>Loan Applications</h3>
+                
+                <!-- Search and Filter -->
+                <div class="search-filter">
+                    <input type="text" id="searchInput" placeholder="Search by Application Number or Customer Name..." style="flex: 1; min-width: 250px;">
+                    <select id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Sent for verification">Sent for verification</option>
+                        <option value="Verified">Verified</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                    <select id="amountFilter">
+                        <option value="">All Amounts</option>
+                        <option value="0-500000">₹0 - ₹5 Lakh</option>
+                        <option value="500000-1000000">₹5 - ₹10 Lakh</option>
+                        <option value="1000000-2000000">₹10 - ₹20 Lakh</option>
+                        <option value="2000000+">₹20 Lakh+</option>
+                    </select>
+                </div>
+
+                <table class="table" id="applicationsTable">
+                    <thead>
+                        <tr>
+                            <th>App Number</th>
+                            <th>Customer Name</th>
+                            <th>Amount</th>
+                            <th>Tenure</th>
+                            <th>Status</th>
+                            <th>Applied Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applicationsTableBody">
+                        <!-- Sample data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Details Modal -->
+    <div id="applicationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Application Details</h2>
+            
+            <div class="detail-grid">
+                <div class="detail-section">
+                    <h4>Customer Information</h4>
+                    <div class="detail-item">
+                        <span class="detail-label">Full Name:</span>
+                        <span class="detail-value" id="customerName">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value" id="customerEmail">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Phone:</span>
+                        <span class="detail-value" id="customerPhone">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Date of Birth:</span>
+                        <span class="detail-value" id="customerDOB">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Aadhar No:</span>
+                        <span class="detail-value" id="customerAadhar">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">PAN:</span>
+                        <span class="detail-value" id="customerPAN">-</span>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h4>Income Details</h4>
+                    <div class="detail-item">
+                        <span class="detail-label">Monthly Salary:</span>
+                        <span class="detail-value" id="monthlySalary">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Other Income:</span>
+                        <span class="detail-value" id="otherIncome">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Employer Name:</span>
+                        <span class="detail-value" id="employerName">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Employment Type:</span>
+                        <span class="detail-value" id="employmentType">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Total Income:</span>
+                        <span class="detail-value" id="totalIncome">-</span>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h4>Property Details</h4>
+                    <div class="detail-item">
+                        <span class="detail-label">Property Name:</span>
+                        <span class="detail-value" id="propertyName">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Location:</span>
+                        <span class="detail-value" id="propertyLocation">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Estimated Cost:</span>
+                        <span class="detail-value" id="propertyCost">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Property Type:</span>
+                        <span class="detail-value" id="propertyType">-</span>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h4>Loan Details</h4>
+                    <div class="detail-item">
+                        <span class="detail-label">Requested Amount:</span>
+                        <span class="detail-value" id="loanAmount">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Tenure:</span>
+                        <span class="detail-value" id="loanTenure">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Interest Rate:</span>
+                        <span class="detail-value" id="interestRate">8.5%</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Calculated EMI:</span>
+                        <span class="detail-value" id="calculatedEMI">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Eligible Amount:</span>
+                        <span class="detail-value" id="eligibleAmount">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Current Status:</span>
+                        <span class="detail-value" id="currentStatus">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-success" onclick="approveApplication()">Approve Application</button>
+                <button class="btn btn-danger" onclick="rejectApplication()">Reject Application</button>
+                <button class="btn btn-secondary" onclick="markAsVerified()">Mark as Verified</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample application data
+        let applications = [
+            {
+                id: 1,
+                applicationNumber: "HL001",
+                customerName: "Rajesh Kumar",
+                email: "rajesh.kumar@email.com",
+                phone: "+91 9876543210",
+                dob: "1985-06-15",
+                aadhar: "1234-5678-9012",
+                pan: "ABCDE1234F",
+                monthlySalary: 75000,
+                otherIncome: 10000,
+                employerName: "TCS",
+                employmentType: "Salaried",
+                propertyName: "Green Valley Apartments",
+                propertyLocation: "Hyderabad",
+                propertyCost: 5000000,
+                propertyType: "Residential",
+                loanAmount: 4000000,
+                tenure: 240,
+                status: "Submitted",
+                appliedDate: "2024-01-15"
+            },
+            {
+                id: 2,
+                applicationNumber: "HL002",
+                customerName: "Priya Sharma",
+                email: "priya.sharma@email.com",
+                phone: "+91 9876543211",
+                dob: "1990-03-22",
+                aadhar: "2345-6789-0123",
+                pan: "BCDEF2345G",
+                monthlySalary: 60000,
+                otherIncome: 5000,
+                employerName: "Infosys",
+                employmentType: "Salaried",
+                propertyName: "Sun City Heights",
+                propertyLocation: "Bangalore",
+                propertyCost: 3500000,
+                propertyType: "Residential",
+                loanAmount: 2800000,
+                tenure: 180,
+                status: "Sent for verification",
+                appliedDate: "2024-01-18"
+            },
+            {
+                id: 3,
+                applicationNumber: "HL003",
+                customerName: "Amit Patel",
+                email: "amit.patel@email.com",
+                phone: "+91 9876543212",
+                dob: "1988-09-10",
+                aadhar: "3456-7890-1234",
+                pan: "CDEFG3456H",
+                monthlySalary: 90000,
+                otherIncome: 15000,
+                employerName: "Wipro",
+                employmentType: "Salaried",
+                propertyName: "Elite Residency",
+                propertyLocation: "Pune",
+                propertyCost: 6000000,
+                propertyType: "Residential",
+                loanAmount: 4800000,
+                tenure: 300,
+                status: "Verified",
+                appliedDate: "2024-01-20"
+            },
+            {
+                id: 4,
+                applicationNumber: "HL004",
+                customerName: "Sneha Reddy",
+                email: "sneha.reddy@email.com",
+                phone: "+91 9876543213",
+                dob: "1992-12-05",
+                aadhar: "4567-8901-2345",
+                pan: "DEFGH4567I",
+                monthlySalary: 55000,
+                otherIncome: 8000,
+                employerName: "Accenture",
+                employmentType: "Salaried",
+                propertyName: "Royal Gardens",
+                propertyLocation: "Chennai",
+                propertyCost: 4200000,
+                propertyType: "Residential",
+                loanAmount: 3400000,
+                tenure: 240,
+                status: "Approved",
+                appliedDate: "2024-01-12"
+            },
+            {
+                id: 5,
+                applicationNumber: "HL005",
+                customerName: "Vikram Singh",
+                email: "vikram.singh@email.com",
+                phone: "+91 9876543214",
+                dob: "1987-04-18",
+                aadhar: "5678-9012-3456",
+                pan: "EFGHI5678J",
+                monthlySalary: 45000,
+                otherIncome: 3000,
+                employerName: "Tech Mahindra",
+                employmentType: "Salaried",
+                propertyName: "Dream Homes",
+                propertyLocation: "Mumbai",
+                propertyCost: 3000000,
+                propertyType: "Residential",
+                loanAmount: 2500000,
+                tenure: 180,
+                status: "Rejected",
+                appliedDate: "2024-01-10"
+            }
+        ];
+
+        let currentApplicationId = null;
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simple validation (in real application, this would be server-side)
+            if (username === 'admin' && password === 'admin123') {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('adminName').textContent = username;
+                loadDashboard();
+            } else {
+                alert('Invalid credentials! Use admin/admin123');
+            }
+        });
+
+        // Load dashboard data
+        function loadDashboard() {
+            updateCurrentDate();
+            updateStatistics();
+            renderApplicationsTable();
+        }
+
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-IN', options);
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const total = applications.length;
+            const pending = applications.filter(app => 
+                app.status === 'Submitted' || app.status === 'Sent for verification'
+            ).length;
+            const approved = applications.filter(app => app.status === 'Approved').length;
+            const rejected = applications.filter(app => app.status === 'Rejected').length;
+
+            document.getElementById('totalApplications').textContent = total;
+            document.getElementById('pendingApplications').textContent = pending;
+            document.getElementById('approvedApplications').textContent = approved;
+            document.getElementById('rejectedApplications').textContent = rejected;
+        }
+
+        // Render applications table
+        function renderApplicationsTable(filteredApplications = applications) {
+            const tbody = document.getElementById('applicationsTableBody');
+            tbody.innerHTML = '';
+
+            filteredApplications.forEach(app => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${app.applicationNumber}</td>
+                    <td>${app.customerName}</td>
+                    <td>₹${app.loanAmount.toLocaleString('en-IN')}</td>
+                    <td>${app.tenure} months</td>
+                    <td><span class="status-badge status-${app.status.toLowerCase().replace(/\s+/g, '-')}">${app.status}</span></td>
+                    <td>${new Date(app.appliedDate).toLocaleDateString('en-IN')}</td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="viewApplication(${app.id})" style="padding: 5px 10px; font-size: 12px;">View Details</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // View application details
+        function viewApplication(applicationId) {
+            const app = applications.find(a => a.id === applicationId);
+            if (!app) return;
+
+            currentApplicationId = applicationId;
+
+            // Populate modal with application data
+            document.getElementById('modalTitle').textContent = `Application ${app.applicationNumber} - Details`;
+            document.getElementById('customerName').textContent = app.customerName;
+            document.getElementById('customerEmail').textContent = app.email;
+            document.getElementById('customerPhone').textContent = app.phone;
+            document.getElementById('customerDOB').textContent = new Date(app.dob).toLocaleDateString('en-IN');
+            document.getElementById('customerAadhar').textContent = app.aadhar;
+            document.getElementById('customerPAN').textContent = app.pan;
+            
+            document.getElementById('monthlySalary').textContent = `₹${app.monthlySalary.toLocaleString('en-IN')}`;
+            document.getElementById('otherIncome').textContent = `₹${app.otherIncome.toLocaleString('en-IN')}`;
+            document.getElementById('employerName').textContent = app.employerName;
+            document.getElementById('employmentType').textContent = app.employmentType;
+            document.getElementById('totalIncome').textContent = `₹${(app.monthlySalary + app.otherIncome).toLocaleString('en-IN')}`;
+            
+            document.getElementById('propertyName').textContent = app.propertyName;
+            document.getElementById('propertyLocation').textContent = app.propertyLocation;
+            document.getElementById('propertyCost').textContent = `₹${app.propertyCost.toLocaleString('en-IN')}`;
+            document.getElementById('propertyType').textContent = app.propertyType;
+            
+            document.getElementById('loanAmount').textContent = `₹${app.loanAmount.toLocaleString('en-IN')}`;
+            document.getElementById('loanTenure').textContent = `${app.tenure} months`;
+            
+            // Calculate EMI and eligible amount
+            const emi = calculateEMI(app.loanAmount, app.tenure, 8.5);
+            const eligibleAmount = calculateEligibleAmount(app.monthlySalary);
+            
+            document.getElementById('calculatedEMI').textContent = `₹${emi.toLocaleString('en-IN')}`;
+            document.getElementById('eligibleAmount').textContent = `₹${eligibleAmount.toLocaleString('en-IN')}`;
+            document.getElementById('currentStatus').textContent = app.status;
+
+            // Show modal
+            document.getElementById('applicationModal').style.display = 'block';
+        }
+
+        // Calculate EMI
+        function calculateEMI(principal, tenure, rate) {
+            const monthlyRate = rate / (12 * 100);
+            if (monthlyRate === 0) return principal / tenure;
+            
+            const factor = Math.pow(1 + monthlyRate, tenure);
+            return Math.round((principal * monthlyRate * factor) / (factor - 1));
+        }
+
+        // Calculate eligible loan amount
+        function calculateEligibleAmount(monthlySalary) {
+            return Math.round(60 * (0.6 * monthlySalary));
+        }
+
+        // Approve application
+        function approveApplication() {
+            if (currentApplicationId) {
+                const app = applications.find(a => a.id === currentApplicationId);
+                if (app) {
+                    app.status = 'Approved';
+                    closeModal();
+                    renderApplicationsTable();
+                    updateStatistics();
+                    showNotification('Application approved successfully!', 'success');
+                }
+            }
+        }
+
+        // Reject application
+        function rejectApplication() {
+            if (currentApplicationId) {
+                const reason = prompt('Please enter rejection reason:');
+                if (reason) {
+                    const app = applications.find(a => a.id === currentApplicationId);
+                    if (app) {
+                        app.status = 'Rejected';
+                        app.rejectionReason = reason;
+                        closeModal();
+                        renderApplicationsTable();
+                        updateStatistics();
+                        showNotification('Application rejected successfully!', 'error');
+                    }
+                }
+            }
+        }
+
+        // Mark as verified
+        function markAsVerified() {
+            if (currentApplicationId) {
+                const app = applications.find(a => a.id === currentApplicationId);
+                if (app) {
+                    app.status = 'Verified';
+                    closeModal();
+                    renderApplicationsTable();
+                    updateStatistics();
+                    showNotification('Application marked as verified!', 'info');
+                }
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('applicationModal').style.display = 'none';
+            currentApplicationId = null;
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            
+            switch(type) {
+                case 'success':
+                    notification.style.background = 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)';
+                    break;
+                case 'error':
+                    notification.style.background = 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)';
+                    break;
+                case 'info':
+                    notification.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    break;
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Search and filter functionality
+        document.getElementById('searchInput').addEventListener('input', filterApplications);
+        document.getElementById('statusFilter').addEventListener('change', filterApplications);
+        document.getElementById('amountFilter').addEventListener('change', filterApplications);
+
+        function filterApplications() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const amountFilter = document.getElementById('amountFilter').value;
+
+            let filteredApps = applications.filter(app => {
+                const matchesSearch = app.applicationNumber.toLowerCase().includes(searchTerm) ||
+                                    app.customerName.toLowerCase().includes(searchTerm);
+                
+                const matchesStatus = !statusFilter || app.status === statusFilter;
+                
+                let matchesAmount = true;
+                if (amountFilter) {
+                    const amount = app.loanAmount;
+                    switch(amountFilter) {
+                        case '0-500000':
+                            matchesAmount = amount <= 500000;
+                            break;
+                        case '500000-1000000':
+                            matchesAmount = amount > 500000 && amount <= 1000000;
+                            break;
+                        case '1000000-2000000':
+                            matchesAmount = amount > 1000000 && amount <= 2000000;
+                            break;
+                        case '2000000+':
+                            matchesAmount = amount > 2000000;
+                            break;
+                    }
+                }
+                
+                return matchesSearch && matchesStatus && matchesAmount;
+            });
+
+            renderApplicationsTable(filteredApps);
+        }
+
+        // Logout functionality
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                document.getElementById('dashboard').style.display = 'none';
+                document.getElementById('loginContainer').style.display = 'flex';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            }
+        }
+
+        // Modal close functionality
+        document.querySelector('.close').addEventListener('click', closeModal);
+        
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('applicationModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Add CSS animation for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Add more sample applications for demonstration
+        function addMoreSampleData() {
+            const moreSampleApps = [
+                {
+                    id: 6,
+                    applicationNumber: "HL006",
+                    customerName: "Anita Desai",
+                    email: "anita.desai@email.com",
+                    phone: "+91 9876543215",
+                    dob: "1989-07-25",
+                    aadhar: "6789-0123-4567",
+                    pan: "FGHIJ6789K",
+                    monthlySalary: 80000,
+                    otherIncome: 12000,
+                    employerName: "IBM",
+                    employmentType: "Salaried",
+                    propertyName: "Paradise Heights",
+                    propertyLocation: "Delhi",
+                    propertyCost: 7500000,
+                    propertyType: "Residential",
+                    loanAmount: 6000000,
+                    tenure: 240,
+                    status: "Submitted",
+                    appliedDate: "2024-01-25"
+                },
+                {
+                    id: 7,
+                    applicationNumber: "HL007",
+                    customerName: "Rohit Mehta",
+                    email: "rohit.mehta@email.com",
+                    phone: "+91 9876543216",
+                    dob: "1986-11-12",
+                    aadhar: "7890-1234-5678",
+                    pan: "GHIJK7890L",
+                    monthlySalary: 95000,
+                    otherIncome: 20000,
+                    employerName: "Google",
+                    employmentType: "Salaried",
+                    propertyName: "Tech Park Residency",
+                    propertyLocation: "Bangalore",
+                    propertyCost: 8000000,
+                    propertyType: "Residential",
+                    loanAmount: 6400000,
+                    tenure: 300,
+                    status: "Sent for verification",
+                    appliedDate: "2024-01-22"
+                },
+                {
+                    id: 8,
+                    applicationNumber: "HL008",
+                    customerName: "Kavya Nair",
+                    email: "kavya.nair@email.com",
+                    phone: "+91 9876543217",
+                    dob: "1993-02-14",
+                    aadhar: "8901-2345-6789",
+                    pan: "HIJKL8901M",
+                    monthlySalary: 50000,
+                    otherIncome: 5000,
+                    employerName: "Cognizant",
+                    employmentType: "Salaried",
+                    propertyName: "Green Meadows",
+                    propertyLocation: "Kochi",
+                    propertyCost: 3800000,
+                    propertyType: "Residential",
+                    loanAmount: 3000000,
+                    tenure: 240,
+                    status: "Verified",
+                    appliedDate: "2024-01-19"
+                }
+            ];
+
+            applications = applications.concat(moreSampleApps);
+            updateStatistics();
+            renderApplicationsTable();
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Escape key to close modal
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+            
+            // Ctrl+F to focus search
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        });
+
+        // Auto-refresh dashboard every 30 seconds
+        setInterval(() => {
+            if (document.getElementById('dashboard').style.display === 'block') {
+                updateCurrentDate();
+                // In a real application, you would fetch new data from server here
+            }
+        }, 30000);
+
+        // Initialize with additional sample data
+        addMoreSampleData();
+
+        // Add export functionality
+        function exportApplicationsToCSV() {
+            const headers = ['Application Number', 'Customer Name', 'Email', 'Phone', 'Loan Amount', 'Tenure', 'Status', 'Applied Date'];
+            const csvContent = [
+                headers.join(','),
+                ...applications.map(app => [
+                    app.applicationNumber,
+                    app.customerName,
+                    app.email,
+                    app.phone,
+                    app.loanAmount,
+                    app.tenure,
+                    app.status,
+                    app.appliedDate
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'loan_applications.csv');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Add export button to the applications table
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableHeader = document.querySelector('.applications-table h3');
+            if (tableHeader) {
+                const exportBtn = document.createElement('button');
+                exportBtn.className = 'btn btn-secondary';
+                exportBtn.style.cssText = 'float: right; margin-top: -5px; padding: 8px 15px; font-size: 14px;';
+                exportBtn.textContent = 'Export CSV';
+                exportBtn.onclick = exportApplicationsToCSV;
+                tableHeader.parentNode.insertBefore(exportBtn, tableHeader.nextSibling);
+            }
+        });
+
+        // Print functionality
+        function printApplicationDetails() {
+            if (currentApplicationId) {
+                const app = applications.find(a => a.id === currentApplicationId);
+                if (app) {
+                    const printWindow = window.open('', '_blank');
+                    const emi = calculateEMI(app.loanAmount, app.tenure, 8.5);
+                    const eligibleAmount = calculateEligibleAmount(app.monthlySalary);
+                    
+                    printWindow.document.write(`
+                        <html>
+                            <head>
+                                <title>Application ${app.applicationNumber} - Details</title>
+                                <style>
+                                    body { font-family: Arial, sans-serif; margin: 20px; }
+                                    .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+                                    .section { margin-bottom: 20px; }
+                                    .section h3 { background: #f0f0f0; padding: 10px; margin: 0 0 10px 0; }
+                                    .detail { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; }
+                                    .label { font-weight: bold; }
+                                    .value { text-align: right; }
+                                </style>
+                            </head>
+                            <body>
+                                <div class="header">
+                                    <h1>Home Loan Application Details</h1>
+                                    <h2>Application Number: ${app.applicationNumber}</h2>
+                                </div>
+                                
+                                <div class="section">
+                                    <h3>Customer Information</h3>
+                                    <div class="detail"><span class="label">Full Name:</span><span class="value">${app.customerName}</span></div>
+                                    <div class="detail"><span class="label">Email:</span><span class="value">${app.email}</span></div>
+                                    <div class="detail"><span class="label">Phone:</span><span class="value">${app.phone}</span></div>
+                                    <div class="detail"><span class="label">Date of Birth:</span><span class="value">${new Date(app.dob).toLocaleDateString('en-IN')}</span></div>
+                                    <div class="detail"><span class="label">Aadhar No:</span><span class="value">${app.aadhar}</span></div>
+                                    <div class="detail"><span class="label">PAN:</span><span class="value">${app.pan}</span></div>
+                                </div>
+                                
+                                <div class="section">
+                                    <h3>Income Details</h3>
+                                    <div class="detail"><span class="label">Monthly Salary:</span><span class="value">₹${app.monthlySalary.toLocaleString('en-IN')}</span></div>
+                                    <div class="detail"><span class="label">Other Income:</span><span class="value">₹${app.otherIncome.toLocaleString('en-IN')}</span></div>
+                                    <div class="detail"><span class="label">Employer Name:</span><span class="value">${app.employerName}</span></div>
+                                    <div class="detail"><span class="label">Employment Type:</span><span class="value">${app.employmentType}</span></div>
+                                    <div class="detail"><span class="label">Total Income:</span><span class="value">₹${(app.monthlySalary + app.otherIncome).toLocaleString('en-IN')}</span></div>
+                                </div>
+                                
+                                <div class="section">
+                                    <h3>Property Details</h3>
+                                    <div class="detail"><span class="label">Property Name:</span><span class="value">${app.propertyName}</span></div>
+                                    <div class="detail"><span class="label">Location:</span><span class="value">${app.propertyLocation}</span></div>
+                                    <div class="detail"><span class="label">Estimated Cost:</span><span class="value">₹${app.propertyCost.toLocaleString('en-IN')}</span></div>
+                                    <div class="detail"><span class="label">Property Type:</span><span class="value">${app.propertyType}</span></div>
+                                </div>
+                                
+                                <div class="section">
+                                    <h3>Loan Details</h3>
+                                    <div class="detail"><span class="label">Requested Amount:</span><span class="value">₹${app.loanAmount.toLocaleString('en-IN')}</span></div>
+                                    <div class="detail"><span class="label">Tenure:</span><span class="value">${app.tenure} months</span></div>
+                                    <div class="detail"><span class="label">Interest Rate:</span><span class="value">8.5%</span></div>
+                                    <div class="detail"><span class="label">Calculated EMI:</span><span class="value">₹${emi.toLocaleString('en-IN')}</span></div>
+                                    <div class="detail"><span class="label">Eligible Amount:</span><span class="value">₹${eligibleAmount.toLocaleString('en-IN')}</span></div>
+                                    <div class="detail"><span class="label">Current Status:</span><span class="value">${app.status}</span></div>
+                                    <div class="detail"><span class="label">Applied Date:</span><span class="value">${new Date(app.appliedDate).toLocaleDateString('en-IN')}</span></div>
+                                </div>
+                            </body>
+                        </html>
+                    `);
+                    
+                    printWindow.document.close();
+                    printWindow.print();
+                }
+            }
+        }
+
+        // Add print button to modal
+        function addPrintButtonToModal() {
+            const actionButtons = document.querySelector('.action-buttons');
+            if (actionButtons) {
+                const printBtn = document.createElement('button');
+                printBtn.className = 'btn btn-secondary';
+                printBtn.textContent = 'Print Details';
+                printBtn.onclick = printApplicationDetails;
+                actionButtons.appendChild(printBtn);
+            }
+        }
+
+        // Initialize print button
+        addPrintButtonToModal();
+    </script>
+</body>
+</html>
