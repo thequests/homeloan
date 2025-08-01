@@ -1,0 +1,90 @@
+# ------------------------------------------------------------------
+#          API GATEWAY CONFIGURATION (Corrected)
+# ------------------------------------------------------------------
+
+server:
+  port: 8080
+
+spring:
+  application:
+    # The name this gateway will register itself with in Eureka
+    name: API-GATEWAY
+
+  cloud:
+    gateway:
+      routes:
+        # --- Route for EMI Service ---
+        - id: emi-service-route
+          uri: lb://EMI-SERVICE
+          predicates:
+            - Path=/api/emi/**
+
+        # --- Route for Loan Account Service ---
+        - id: loan-account-service-route
+          uri: lb://LOAN-ACCOUNT-SERVICE
+          predicates:
+            - Path=/api/loan-accounts/**
+
+        # --- Route for Loan Application Service ---
+        - id: loan-application-service-route
+          uri: lb://LOANAPPLICATION-SERVICE
+          predicates:
+            - Path=/api/loans/**
+
+        # --- Route for Property Service ---
+        - id: property-service-route
+          uri: lb://PROPERTYSERVICE
+          predicates:
+            - Path=/api/properties/**
+
+        # --- Route for Tracker Service (FIXED) ---
+        - id: tracker-service-route
+          # CORRECTED: The URI now points to the correct service name registered in Eureka.
+          uri: lb://TRACKER-SERVICE
+          predicates:
+            # CORRECTED: A single path that covers both controllers in the tracker-service.
+            - Path=/api/application/**
+
+        # --- Route for User Service ---
+
+        - id: user-service-route
+          uri: lb://USERSERVICE
+          predicates:
+            - Path=/api/users/**
+
+        - id: income-detail-route
+          uri: lb://INCOMEDETAILSERVICE
+          predicates:
+          - Path=/api/income-details/**
+
+
+        - id: applicant-service-route
+          uri: lb://ApplicantService
+          predicates:
+          - Path=/api/applicant
+
+        - id: admin-service
+          uri: lb://ADMINSERVICE
+          predicates:
+          - Path=/api/admin/**
+
+
+        - id: income-service
+          uri: lb://INCOMEDETAIL-SERVICE
+          predicates:
+          - Path=/api/income-details
+
+#          filters:
+#          - StripPrefix=2
+# ------------------------------------------------------------------
+#          EUREKA CLIENT CONFIGURATION
+# ------------------------------------------------------------------
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}

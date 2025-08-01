@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account - HomeLoan Bank</title>
+  <link rel="stylesheet" href="css/create-account.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <div class="overlay">
+        <h1>HomeLoan Bank</h1>
+        <h2>Your Dream Home Awaits</h2>
+        <p>
+          Secure the best home loan rates and turn your homeownership dreams into reality with our expert guidance and competitive financing options.
+        </p>
+        <ul>
+          <li>Competitive interest rates</li>
+          <li>Quick approval process</li>
+          <li>Expert guidance every step</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="right">
+      <h2>Create an Account</h2>
+      <p>Please fill in the form to create an account.</p>
+      <form id="createAccountForm">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" required />
+
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" required />
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" required />
+        <small>
+          Must be at least 8 characters, including an uppercase letter, a lowercase letter, a number, and a special character.
+        </small>
+
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" required />
+
+        <button type="submit">Create Account</button>
+      </form>
+
+      <div class="signin-link">
+        Already have an account? <a href="index.html">Sign In</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/create-account.js"></script>
+</body>
+</html>
